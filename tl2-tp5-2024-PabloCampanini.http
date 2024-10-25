@@ -1,0 +1,6 @@
+@tl2_tp5_2024_PabloCampanini_HostAddress = http://localhost:5013
+
+GET {{tl2_tp5_2024_PabloCampanini_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
