@@ -6,7 +6,7 @@ public class PresupuestosRepository
 
     public void CreatePresupuesto(Presupuestos presupuestoNuevo)
     {
-        string queryString = "INSERT INTO Presupuestos (NombreDestinatario, FechaCreacion)" +
+        string queryString = "INSERT INTO Presupuestos (NombreDestinatario, FechaCreacion) " +
                              "VALUES ('@NombreDestinatario', '@FechaCreacion')";
 
         using (SqliteConnection connection = new SqliteConnection(connectionString))
@@ -24,8 +24,8 @@ public class PresupuestosRepository
 
     public List<Presupuestos> GetAllPresupuestos()
     {
-        string queryString = "SELECT * FROM Presupuestos AS p" + 
-                             "INNER JOIN PresupuestosDetalle AS pre ON p.idPresupuesto = pre.idPresupuesto" + 
+        string queryString = "SELECT * FROM Presupuestos AS p " +
+                             "INNER JOIN PresupuestosDetalle AS pre ON p.idPresupuesto = pre.idPresupuesto " +
                              "INNER JOIN Productos AS pro ON pre.idProducto = pro.idProducto";
 
         List<Presupuestos> ListaPresupuestos = new List<Presupuestos>();
@@ -68,20 +68,81 @@ public class PresupuestosRepository
         return ListaPresupuestos;
     }
 
-    public void GetDetalleDePresupuesto(int idBuscado)
+    public Presupuestos GetDetalleDePresupuesto(int idBuscado)
     {
-        string queryString = "";
+        string queryString = "SELECT * FROM Presupuestos AS p " +
+                             "INNER JOIN PresupuestosDetalle AS pre ON p.idPresupuesto = pre.idPresupuesto " +
+                             "INNER JOIN Productos AS pro ON pre.idProducto = pro.idProducto " +
+                             "WHERE p.idPresupuesto = @idBuscado";
+
+        Presupuestos pres = new Presupuestos();
+
+        using (SqliteConnection connection = new SqliteConnection())
+        {
+            SqliteCommand command = new SqliteCommand(queryString, connection);
+
+            connection.Open();
+
+            command.Parameters.Add(new SqliteParameter("idBuscado", idBuscado));
+
+            using (SqliteDataReader reader = command.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    Productos prod = new Productos();
+
+                    prod.IdProducto = Convert.ToInt32(reader["idProducto"]);
+                    prod.Descripcion = Convert.ToString(reader["Descripcion"]);
+                    prod.Precio = Convert.ToInt32(reader["Precio"]);
+
+                    PresupuestosDetalle prodDet = new PresupuestosDetalle();
+
+                    int cantidad = Convert.ToInt32(reader["Cantidad"]);
+                    prodDet.CargarProducto(cantidad, prod);
 
 
+                    pres.IdPresupuesto = Convert.ToInt32(reader["idPresupuesto"]);
+                    pres.NombreDestinatario = Convert.ToString(reader["NombreDestinatario"]);
+                    pres.FechaCreacion = Convert.ToDateTime(reader["FechaCreacion"]);
+                    pres.AgregarDetalle(prodDet);
+                }
+            }
+        }
+
+        return pres;
     }
 
     public void UpdatePresupuesto(int idBuscado)
     {
-
+        
     }
 
     public void DeletePresupuesto(int idBuscado)
     {
+        string queryStringDetalle = "DELETE FROM PresupuestosDetalle " +
+                                    "WHERE idPresupuesto = @idBuscado";
 
+        string queryStringPresupuesto = "DELETE FROM Presupuestos " +
+                                        "WHERE idPresupuesto = @idBuscado";
+
+         using (SqliteConnection connection = new SqliteConnection(connectionString))
+        {
+            SqliteCommand commandDetalle = new SqliteCommand(queryStringDetalle, connection);
+
+            connection.Open();
+
+            commandDetalle.Parameters.Add(new SqliteParameter("@idBuscado", idBuscado));
+
+            commandDetalle.ExecuteNonQuery();
+        
+
+            SqliteCommand commandPresupuesto = new SqliteCommand(queryStringPresupuesto, connection);
+
+            commandPresupuesto.Parameters.Add(new SqliteParameter("@idBuscado", idBuscado));
+
+            commandPresupuesto.ExecuteNonQuery();
+        
+            connection.Close();
+        }
     }
 }
