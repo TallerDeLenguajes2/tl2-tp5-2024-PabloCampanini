@@ -28,7 +28,7 @@ public class ProductoController : ControllerBase
         return Ok(productosRep.GetAllProductos());
     }
 
-    [HttpPut("ModificarNombreProducto")]
+    [HttpPut("ModificarNombreProducto/{idBuscado}")]
     public ActionResult ModificarNombreProducto(int idBuscado, [FromBody] Productos producto)
     {
         productosRep.UpdateProducto(idBuscado, producto);
