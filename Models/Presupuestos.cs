@@ -14,6 +14,10 @@ public class Presupuestos
     public DateTime FechaCreacion { get => fechaCreacion; set => fechaCreacion = value; }
     public List<PresupuestosDetalle> Detalle { get => detalle; }
 
+    public void AgregarDetalle(PresupuestosDetalle nuevoDetalle)
+    {
+        detalle.Add(nuevoDetalle);
+    }
     public double MontoPresupuesto()
     {
         double monto = 0;

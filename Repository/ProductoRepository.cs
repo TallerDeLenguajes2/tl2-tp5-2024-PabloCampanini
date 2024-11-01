@@ -8,7 +8,7 @@ public class ProductoRepository
     public void CreateProducto(Productos producto)
     {
         //Query a realizar
-        string queryString = $"INSER INTO Productos (Descripcion, Precio) VALUES (@Descripcion, @Precio)";
+        string queryString = "INSER INTO Productos (Descripcion, Precio) VALUES (@Descripcion, @Precio)";
 
         //Conexion a la db
         using (SqliteConnection connection = new SqliteConnection(connectionString))
