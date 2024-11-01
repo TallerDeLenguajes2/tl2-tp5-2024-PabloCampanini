@@ -8,7 +8,7 @@ public class ProductoRepository
     public void CreateProducto(Productos producto)
     {
         //Query a realizar
-        string queryString = "INSER INTO Productos (Descripcion, Precio) VALUES (@Descripcion, @Precio)";
+        string queryString = "INSERT INTO Productos (Descripcion, Precio) VALUES (@Descripcion, @Precio)";
 
         //Conexion a la db
         using (SqliteConnection connection = new SqliteConnection(connectionString))
@@ -33,7 +33,7 @@ public class ProductoRepository
     public void UpdateProducto(int idBuscado, Productos producto)
     {
         string queryString = "UPDATE Productos " +
-                             "SET Descripcion = @Descripcion, Precio = @Precio " +
+                             "SET Descripcion = @Descripcion " +
                              "WHERE idProducto = @idBuscado";
 
         using (SqliteConnection connection = new SqliteConnection(connectionString))
@@ -43,7 +43,6 @@ public class ProductoRepository
             connection.Open();
 
             command.Parameters.Add(new SqliteParameter("@Descripcion", producto.Descripcion));
-            command.Parameters.Add(new SqliteParameter("@Precio", producto.Precio));
             command.Parameters.Add(new SqliteParameter("@idBuscado", idBuscado));
 
             command.ExecuteNonQuery();
@@ -70,7 +69,7 @@ public class ProductoRepository
                 {
                     Productos productoNuevo = new Productos();
 
-                    productoNuevo.IdProducto = Convert.ToInt32(reader["idPrducto"]);
+                    productoNuevo.IdProducto = Convert.ToInt32(reader["idProducto"]);
                     productoNuevo.Descripcion = Convert.ToString(reader["Descripcion"]);
                     productoNuevo.Precio = Convert.ToInt32(reader["Precio"]);
 
