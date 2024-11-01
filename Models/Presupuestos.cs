@@ -11,21 +11,35 @@ public class Presupuestos
 
     public int IdPresupuesto { get => idPresupuesto; set => idPresupuesto = value; }
     public string NombreDestinatario { get => nombreDestinatario; set => nombreDestinatario = value; }
-    public List<PresupuestosDetalle> Detalle { get => detalle; }
     public DateTime FechaCreacion { get => fechaCreacion; set => fechaCreacion = value; }
+    public List<PresupuestosDetalle> Detalle { get => detalle; }
 
-    public void MontoPresupuesto()
+    public double MontoPresupuesto()
     {
+        double monto = 0;
 
+        foreach (var producto in Detalle)
+        {
+            monto += (producto.Cantidad * producto.Producto.Precio);    
+        }
+
+        return monto;
     }
 
-    public void MontoPresupuestoConIva()
+    public double MontoPresupuestoConIva()
     {
-
+        return MontoPresupuesto() * 1.21; //IVA = 21%
     }
 
-    public void CantidadProductos()
+    public int CantidadProductos()
     {
+        int cantidad = 0;
+
+        foreach (var producto in Detalle)
+        {
+            cantidad += producto.Cantidad;
+        }
         
+        return cantidad;
     }
 }
