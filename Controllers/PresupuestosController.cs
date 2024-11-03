@@ -21,11 +21,28 @@ public class PresupuestosController : ControllerBase
     }
 
     [HttpPost("AgregarProductoAlPresupuesto/{idBuscado}/ProductoDetalle")]
-    public ActionResult AgregarProducto(int idBuscado)
+    public ActionResult AgregarProducto(int idBuscado,int idprod, int cant)
     {
-        presupuestosRep.UpdatePresupuesto(idBuscado);
+        presupuestosRep.UpdatePresupuesto(idBuscado, idprod, cant);
         return Ok();
     }
 
-    
+    [HttpGet("GetPresupuestos")]
+    public ActionResult<List<Presupuestos>> GetPresupestos()
+    {
+        return Ok(presupuestosRep.GetAllPresupuestos());    
+    }
+
+    [HttpGet("DetallePresupuesto/{idBuscado}")]
+    public ActionResult<Presupuestos> DetallePresupuesto(int idBuscado)
+    {
+        return Ok(presupuestosRep.GetDetalleDePresupuesto(idBuscado));
+    }
+
+    [HttpDelete("BorrarPresupuesto/{idBuscado}")]
+    public ActionResult BorrarPresupuesto(int idBuscado) 
+    {
+        presupuestosRep.DeletePresupuesto(idBuscado);
+        return Ok();
+    }
 }

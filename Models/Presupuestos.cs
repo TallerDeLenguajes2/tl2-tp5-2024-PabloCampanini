@@ -17,6 +17,7 @@ public class Presupuestos
     public void AgregarDetalle(PresupuestosDetalle nuevoDetalle)
     {
         detalle.Add(nuevoDetalle);
+        
     }
     public double MontoPresupuesto()
     {
